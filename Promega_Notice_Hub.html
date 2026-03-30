@@ -1,0 +1,971 @@
+<html lang="ko"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promega Korea — 공지사항 허브</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sol: #FDB813;
+    --deep-galaxy: #13294B;
+    --still-water: #455DA0;
+    --clear-skies: #199ac2;
+    --spirit-purple: #713a61;
+    --surface: #ffffff;
+    --surface-variant: #F5F5F7;
+    --on-surface: #333333;
+    --outline: #CCCCCC;
+    --dark-grey: #515151;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Roboto', sans-serif; background: var(--surface-variant); color: var(--on-surface); min-height: 100vh; }
+
+  header { background: var(--sol); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 72px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .logo-wrap svg { height: 36px; width: auto; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-label { font-size: 13px; font-weight: 500; color: #000; opacity: 0.6; }
+  .btn-add { display: flex; align-items: center; gap: 6px; background: var(--deep-galaxy); color: #fff; border: none; padding: 8px 18px; border-radius: 9999px; font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+  .btn-add:hover { opacity: 0.85; }
+  .btn-add svg { width: 14px; height: 14px; }
+
+  .hero { background: var(--deep-galaxy); padding: 48px 48px 40px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .hero h1 { font-size: 36px; font-weight: 700; color: #fff; line-height: 1.2; letter-spacing: -0.01em; }
+  .hero h1 span { color: var(--sol); }
+  .hero-sub { font-size: 14px; color: rgba(255,255,255,0.55); margin-top: 8px; }
+  .notice-count { background: var(--sol); color: #000; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 9999px; white-space: nowrap; align-self: flex-start; margin-top: 4px; }
+
+  .controls { background: var(--surface); padding: 20px 48px; border-bottom: 1px solid var(--outline); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; position: sticky; top: 72px; z-index: 90; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 360px; }
+  .search-wrap input { width: 100%; padding: 9px 16px 9px 38px; border: 1.5px solid var(--outline); border-radius: 8px; font-family: 'Roboto', sans-serif; font-size: 14px; color: var(--on-surface); background: var(--surface-variant); outline: none; transition: border-color 0.15s; }
+  .search-wrap input:focus { border-color: var(--still-water); }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; opacity: 0.4; }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { padding: 7px 16px; border-radius: 9999px; border: 1.5px solid var(--outline); background: transparent; font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 500; color: var(--dark-grey); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .filter-btn:hover { border-color: var(--deep-galaxy); color: var(--deep-galaxy); }
+  .filter-btn.active { background: var(--deep-galaxy); border-color: var(--deep-galaxy); color: #fff; }
+  .filter-btn.cs.active { background: var(--still-water); border-color: var(--still-water); }
+  .filter-btn.logistics.active { background: var(--clear-skies); border-color: var(--clear-skies); }
+  .filter-btn.regulation.active { background: var(--spirit-purple); border-color: var(--spirit-purple); }
+
+  .main { max-width: 1200px; margin: 0 auto; padding: 32px 48px 64px; }
+  .results-meta { font-size: 13px; color: var(--dark-grey); margin-bottom: 20px; }
+  .results-meta strong { color: var(--on-surface); }
+
+  .notice-list { display: flex; flex-direction: column; gap: 12px; }
+  .notice-card { background: var(--surface); border-radius: 12px; border: 1px solid var(--outline); overflow: hidden; transition: box-shadow 0.15s, transform 0.15s; cursor: pointer; }
+  .notice-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); transform: translateY(-1px); }
+  .notice-card.expanded .card-body { display: block; }
+  .notice-card.expanded .expand-icon { transform: rotate(180deg); }
+  .card-header { padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
+  .team-badge { flex-shrink: 0; padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .badge-cs { background: #e8edf8; color: var(--still-water); }
+  .badge-logistics { background: #e6f4f9; color: #0f7a9d; }
+  .badge-regulation { background: #f3ecf1; color: var(--spirit-purple); }
+  .card-title-group { flex: 1; min-width: 0; }
+  .card-title { font-size: 15px; font-weight: 500; color: var(--on-surface); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-meta { font-size: 12px; color: var(--dark-grey); margin-top: 3px; }
+  .card-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .attachment-badge { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--dark-grey); background: var(--surface-variant); padding: 3px 8px; border-radius: 4px; }
+  .expand-icon { width: 18px; height: 18px; opacity: 0.4; transition: transform 0.2s; flex-shrink: 0; }
+  .card-body { display: none; padding: 0 24px 24px; border-top: 1px solid var(--surface-variant); }
+  .card-body-inner { padding-top: 20px; }
+  .card-content { font-size: 14px; line-height: 1.75; color: var(--on-surface); white-space: pre-line; }
+  .card-attachments { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .attachment-link { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1.5px solid var(--outline); border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--still-water); text-decoration: none; transition: all 0.15s; background: var(--surface); }
+  .attachment-link:hover { border-color: var(--still-water); background: #e8edf8; }
+
+  .empty-state { text-align: center; padding: 80px 24px; color: var(--dark-grey); }
+  .empty-state p { font-size: 15px; margin-top: 12px; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-start; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 16px; width: 100%; max-width: 700px; box-shadow: 0 8px 40px rgba(0,0,0,0.2); margin: auto; }
+  .modal-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--outline); display: flex; align-items: center; justify-content: space-between; }
+  .modal-header h2 { font-size: 18px; font-weight: 700; color: var(--deep-galaxy); }
+  .modal-close { background: none; border: none; cursor: pointer; padding: 4px; color: var(--dark-grey); font-size: 24px; line-height: 1; }
+  .modal-close:hover { color: var(--on-surface); }
+  .modal-body { padding: 24px 28px; }
+  .modal-footer { padding: 20px 28px 24px; border-top: 1px solid var(--outline); display: flex; gap: 10px; justify-content: flex-end; }
+
+  .guide-box { background: #fffbea; border: 1px solid #e8c840; border-radius: 10px; padding: 16px 18px; margin-bottom: 22px; }
+  .guide-box p { font-size: 13px; color: #6a5200; line-height: 1.8; }
+  .guide-box code { background: rgba(0,0,0,0.07); padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 12px; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--on-surface); margin-bottom: 6px; }
+  .req { color: #c0392b; margin-left: 2px; }
+  .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--outline); border-radius: 8px; font-family: 'Roboto', sans-serif; font-size: 14px; color: var(--on-surface); background: var(--surface); outline: none; transition: border-color 0.15s; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--still-water); }
+  .form-textarea { resize: vertical; min-height: 130px; line-height: 1.65; }
+  .form-hint { font-size: 12px; color: var(--dark-grey); margin-top: 5px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .attach-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  .attach-row { display: grid; grid-template-columns: 1fr 1.6fr auto; gap: 8px; align-items: center; }
+  .btn-remove-attach { background: none; border: 1.5px solid var(--outline); border-radius: 6px; width: 34px; height: 36px; cursor: pointer; color: var(--dark-grey); font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .btn-remove-attach:hover { border-color: #c0392b; color: #c0392b; }
+  .btn-add-attach { background: none; border: 1.5px dashed var(--outline); border-radius: 8px; padding: 8px 14px; font-family: 'Roboto', sans-serif; font-size: 13px; color: var(--dark-grey); cursor: pointer; width: 100%; transition: all 0.15s; text-align: center; }
+  .btn-add-attach:hover { border-color: var(--still-water); color: var(--still-water); }
+
+  .result-wrap { margin-top: 6px; }
+  .result-box { background: #1a1f2e; border-radius: 10px; padding: 18px 20px; }
+  .result-box-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.4); margin-bottom: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .result-code { font-family: 'Courier New', monospace; font-size: 12px; color: #7ec8a0; white-space: pre-wrap; word-break: break-all; line-height: 1.65; max-height: 220px; overflow-y: auto; }
+  .result-actions { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .result-hint { font-size: 12px; color: var(--dark-grey); }
+  .result-hint code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+  .dl-success-box { display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; background: #f0faf4; border: 1.5px solid #27ae60; border-radius: 10px; color: #1a7a45; }
+  .dl-success-box svg { flex-shrink: 0; margin-top: 2px; }
+  .dl-success-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .dl-success-sub { font-size: 13px; line-height: 1.6; color: #2d6e4a; }
+
+  .btn-primary { background: var(--deep-galaxy); color: #fff; border: none; padding: 10px 24px; border-radius: 9999px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary { background: transparent; color: var(--dark-grey); border: 1.5px solid var(--outline); padding: 10px 20px; border-radius: 9999px; font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .btn-secondary:hover { border-color: var(--on-surface); color: var(--on-surface); }
+  .btn-copy { background: var(--sol); color: #000; border: none; padding: 8px 20px; border-radius: 9999px; font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .btn-copy:hover { opacity: 0.85; }
+  .btn-copy.copied { background: #27ae60; color: #fff; }
+  .tag-input-wrap { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px; border: 1.5px solid var(--outline); border-radius: 8px; cursor: text; min-height: 42px; align-items: center; transition: border-color 0.15s; }
+  .tag-input-wrap:focus-within { border-color: var(--still-water); }
+  .tag-text-input { border: none; outline: none; font-family: 'Roboto', sans-serif; font-size: 14px; color: var(--on-surface); background: transparent; flex: 1; min-width: 120px; padding: 2px 4px; }
+  .tag-pill { display: inline-flex; align-items: center; gap: 4px; background: #e8edf8; color: var(--still-water); padding: 3px 10px 3px 12px; border-radius: 9999px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .tag-pill button { background: none; border: none; cursor: pointer; font-size: 14px; line-height: 1; color: var(--still-water); padding: 0 0 1px; opacity: 0.7; }
+  .tag-pill button:hover { opacity: 1; }
+
+  .btn-delete-notice { background: none; border: none; cursor: pointer; padding: 4px 6px; border-radius: 6px; color: var(--outline); transition: all 0.15s; flex-shrink: 0; display: flex; align-items: center; }
+  .btn-delete-notice:hover { color: #c0392b; background: #fdf0f0; }
+  .delete-confirm-bar { display: none; background: #fdf0f0; border-top: 1px solid #f5c0b8; padding: 12px 24px; align-items: center; justify-content: space-between; gap: 12px; }
+  .delete-confirm-bar.show { display: flex; }
+  .delete-confirm-msg { font-size: 13px; color: #a32d2d; }
+  .btn-delete-confirm { background: #c0392b; color: #fff; border: none; padding: 6px 16px; border-radius: 9999px; font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; }
+  .btn-delete-cancel { background: none; color: var(--dark-grey); border: 1.5px solid var(--outline); padding: 6px 14px; border-radius: 9999px; font-family: 'Roboto', sans-serif; font-size: 13px; cursor: pointer; }
+  .card-keywords { padding: 0 24px 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .kw-tag { display: inline-block; background: var(--surface-variant); color: var(--dark-grey); padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 500; cursor: pointer; border: 1px solid var(--outline); transition: all 0.12s; }
+  .kw-tag:hover { background: #e8edf8; color: var(--still-water); border-color: var(--still-water); }
+
+
+  /* KEYWORD FILTER BAR */
+  .kw-filter-bar { background: var(--surface); padding: 10px 48px 12px; border-bottom: 1px solid var(--outline); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .kw-filter-bar.hidden { display: none; }
+
+  /* 드롭다운 버튼 */
+  .kw-dropdown-wrap { position: relative; }
+  .kw-dropdown-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 9999px; border: 1.5px solid var(--outline); background: var(--surface); font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 500; color: var(--dark-grey); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .kw-dropdown-btn:hover { border-color: var(--still-water); color: var(--still-water); }
+  .kw-dropdown-btn.active { border-color: var(--still-water); background: #f0f3fb; color: var(--still-water); }
+  .kw-chevron { transition: transform 0.2s; flex-shrink: 0; }
+  .kw-dropdown-btn.open .kw-chevron { transform: rotate(180deg); }
+
+  /* 드롭다운 패널 */
+  .kw-dropdown-panel { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px; max-width: 320px; background: var(--surface); border: 1.5px solid var(--outline); border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 150; overflow: hidden; }
+  .kw-dropdown-panel.open { display: block; }
+  .kw-dropdown-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 8px; border-bottom: 1px solid var(--surface-variant); }
+  .kw-dropdown-title { font-size: 12px; font-weight: 600; color: var(--dark-grey); letter-spacing: 0.04em; text-transform: uppercase; }
+  .kw-pill-list { padding: 8px 10px 10px; display: flex; flex-wrap: wrap; gap: 6px; max-height: 200px; overflow-y: auto; }
+
+  /* 드롭다운 내 키워드 필 */
+  .kw-filter-pill { padding: 5px 12px; border-radius: 9999px; border: 1.5px solid var(--outline); background: transparent; font-family: 'Roboto', sans-serif; font-size: 12px; font-weight: 500; color: var(--dark-grey); cursor: pointer; transition: all 0.15s; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+  .kw-filter-pill:hover { border-color: var(--still-water); color: var(--still-water); background: #f0f3fb; }
+  .kw-filter-pill.active { background: var(--still-water); border-color: var(--still-water); color: #fff; }
+  .kw-filter-pill .pill-check { width: 13px; height: 13px; border-radius: 3px; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .kw-filter-pill.active .pill-check::after { content: ''; display: block; width: 7px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
+
+  /* 선택된 키워드 태그 (버튼 옆에 표시) */
+  .kw-active-tag { display: inline-flex; align-items: center; gap: 5px; background: #e8edf8; color: var(--still-water); padding: 4px 10px 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 500; }
+  .kw-active-tag button { background: none; border: none; cursor: pointer; font-size: 14px; line-height: 1; color: var(--still-water); padding: 0; opacity: 0.7; }
+  .kw-active-tag button:hover { opacity: 1; }
+
+  .kw-clear-btn { font-size: 12px; color: var(--dark-grey); background: none; border: none; cursor: pointer; padding: 2px 4px; font-family: 'Roboto', sans-serif; }
+  .kw-clear-btn:hover { color: var(--on-surface); text-decoration: underline; }
+  footer { background: var(--deep-galaxy); padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer svg { height: 28px; width: auto; opacity: 0.85; }
+  footer p { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+  mark { background: #fff3b0; color: inherit; border-radius: 2px; padding: 0 1px; }
+
+  @media (max-width: 768px) {
+    header, .controls, .hero, footer { padding-left: 20px; padding-right: 20px; }
+    .main { padding: 20px; }
+    .hero h1 { font-size: 26px; }
+    .form-row, .attach-row { grid-template-columns: 1fr; }
+    .header-label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <svg viewBox="0 0 245.5 80.5" xmlns="http://www.w3.org/2000/svg">
+      <path d="m0 0h245.7v80.6h-245.7z" fill="#fdb913"></path>
+      <g fill="#231f20">
+        <path d="m93.2 34.7c-.1-2.3-1.9-6.2-8.3-6.2h-11v.4c.3 5.3.3 16.7 0 22.2v.4s6.1 0 6.1 0v-.4c-.1-2.1-.2-4.7-.2-7.5h3.8c3.6 0 6.1-.9 7.6-2.7 1.8-2.1 1.9-4.3 1.8-6.3zm-10.3 4.7c-.5 0-1.6 0-3 0 0-2.7 0-4.1 0-6.8 1.4 0 2.2-.1 3.3 0 2.7.1 4 1.4 4 3.2s-.4 3.6-4.3 3.8z"></path>
+        <path d="m108.1 33.9h-.3c-.6-.2-.8-.1-1.3-.1-2.7 0-4.9 1.1-6 2.7v-2-.3h-5.5v.4c.4 6.8.3 11.1.2 15.4v1.2s0 .4 0 .4h5.8v-.4s-.1-2.1-.1-2.1c-.2-3.5-.1-5.9 0-7.2.3-1.9 1.5-3.4 4.1-3.4s1.3 0 1.9.1l.5.2.8-4.7z"></path>
+        <path d="m108 43c0 4 3.1 8.8 10.7 8.8s10.4-5 10.4-9.2-4-8.9-10.8-8.9-10.3 2.4-10.3 9.3zm5.9-.2c0-3.5 2-5.1 4.7-5.1s4.6.6 4.6 4.6-2.4 5.6-4.7 5.6c-3.3 0-4.6-2.5-4.6-5"></path>
+        <path d="m160.1 38.8c-.1-3-2.4-5.1-6.3-5.1s-4.7.9-5.9 2.7c-1-1.7-2.8-2.7-5.4-2.7s-4.6 1.2-5.6 2.7v-1.9-.4h-5.5v.4c.2 6.3 0 14.7 0 16.5v.4s5.8 0 5.8 0v-.4c-.1-1.9-.3-7.2 0-9.4.2-1.6.8-3.5 3.2-3.5s2.5.8 2.5 2.6c.1 2.5 0 5 0 7.4v2.9.4s5.8 0 5.8 0v-.6c0-1.8-.2-7.4 0-9.3.2-1.2.7-3.3 3.2-3.3s2.5.8 2.6 2.5c0 1.1 0 7.7-.1 10.2v.6s5.8 0 5.8 0v-.8c-.2-4-.1-7.2 0-9.6 0-1.1 0-1.8 0-2.2"></path>
+        <path d="m172.4 33.7c-4 0-6.1 1-7.8 2.7-2.2 2.4-2.4 5.6-2.3 6.9 0 1.4.4 3.4 1.8 5.1 1.8 2.2 5 3.3 9.1 3.3s3.9-.3 6-.8h.2s.7-4.1.7-4.1l-.5.2c-1.7.5-4 .9-6 .9-3.2 0-5.4-1-5.6-3.7v-.2s13.2 0 13.2 0 0-1.2 0-2.4c0-4.5-2.9-7.9-9.2-7.9m3.9 7.1h-7.8c0-2.1 1.6-3.6 3.9-3.6s3.9 1.1 3.9 3.6"></path>
+        <path d="m197.2 49.6s.4 2.5-.9 3.9c-1.1 1.1-3.3 1.2-4.6 1.2s-2.4 0-5.2-.7l-.7-.2-.7 4h.2c1.6.4 4.5.8 7.5.8s6.7-1 8.1-2.5 2-4 1.9-6.2c-.2-5.8-.2-9.6 0-15.1v-.3s-.3 0-.3 0c-2.5-.4-5.1-.8-7.8-.8-4.3 0-7.1.8-9.1 2.9-2.4 2.5-2.4 5.4-2.4 6.7 0 4.9 3.1 8.1 8.1 8.1s5-1 5.9-1.8zm-4.3-2.2c-2.6 0-4.1-1.3-4.2-3.9 0-1 0-2.9 1.3-4.3 1-1.1 2.5-1.7 4.7-1.7s1.6 0 2.5.2v1.2c0 1.5 0 3.3-.2 4.7-.3 1.9-1.4 3.8-4.2 3.8"></path>
+        <path d="m222.9 51c-.1-3 0-5.8 0-8.3 0-1.7 0-2.3 0-3.3 0-3.3-2.2-5.7-8.2-5.7s-4.5.2-7.4.9h-.2s-.5 4-.5 4l.5-.2c2.5-.9 4.8-1.3 6.9-1.3s3.3.6 3.3 1.6c0 1.7-2.4 1.6-5.4 2.3-3.5.7-7.1 1.8-6.9 6 .2 4.5 4.8 4.9 6.8 4.9s4.7-.7 5.7-2.3v1.5.4s.4 0 .4 0h5.1v-.4zm-5.5-5.5c-.2 2.4-3.3 2.7-4.3 2.7s-2.4-.3-2.6-1.7c-.1-1.3.9-2.3 3.4-2.7 1.1-.2 2.9-.6 3.6-1v2.6z"></path>
+        <path d="m52.2 27c2.9 2.1 4 6.3 2.5 9.7-1.4-2.7-6.8-5-10.4-5.7 2.7-.9 5.9-2.1 8-4z"></path>
+        <path d="m29.8 52.4c-2.9-2.1-4-6.3-2.5-9.7 1.4 2.7 6.8 5 10.4 5.7-2.7.9-5.9 2.1-8 4z"></path>
+        <path d="m28.9 54.2c0-.1 0-.1 0-.2s-.1-.1-.2-.1c-2.4-2.2-4-4.9-3.8-8.1.9-15.8 22.4-14.3 27.2-21.1-3.3-1.9-7-3.1-10.5-4.2-2.5 1.4-5.2 2.2-7.8 3.3-15.7 6.6-20.1 20.2-5.1 30.3h.2z"></path>
+        <path d="m53.3 25.3s-.1 0-.2-.1v.2s.1.1.2.1c2.3 2.1 4 4.9 3.7 8.1-1.1 15.8-22.4 14.3-27.2 21.1 3.3 1.9 7 3.1 10.5 4.2 2.5-1.4 5.2-2.2 7.8-3.3 15.7-6.6 20.1-20.2 5.2-30.3z"></path>
+      </g>
+    </svg>
+  </div>
+  <div class="header-right">
+    <span class="header-label">내부 공지사항 허브</span>
+    <button class="btn-add" onclick="openModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      공지 등록
+    </button>
+  </div>
+</header>
+
+<div class="hero">
+  <div>
+    <h1>공지사항 <span>허브</span></h1>
+    <p class="hero-sub">Customer Service · Logistics · Regulation</p>
+  </div>
+  <div class="notice-count" id="notice-count">총 3건</div>
+</div>
+
+<div class="controls">
+  <div class="filter-group">
+    <button class="filter-btn active" onclick="setTeam('all',this)">전체</button>
+    <button class="filter-btn cs" onclick="setTeam('CS',this)">Customer Service</button>
+    <button class="filter-btn logistics" onclick="setTeam('Logistics',this)">Logistics</button>
+    <button class="filter-btn regulation" onclick="setTeam('Regulation',this)">Regulation</button>
+  </div>
+</div>
+
+<!-- 키워드 필터 바 -->
+<div class="kw-filter-bar" id="kw-filter-bar">
+  <div class="kw-dropdown-wrap" id="kw-dropdown-wrap">
+    <button class="kw-dropdown-btn" id="kw-dropdown-btn" onclick="toggleKwDropdown(event)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+      <span id="kw-btn-label">키워드 필터</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="kw-chevron"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="kw-dropdown-panel" id="kw-dropdown-panel">
+      <div class="kw-dropdown-header">
+        <span class="kw-dropdown-title">키워드 선택</span>
+        <button class="kw-clear-btn" id="kw-clear-btn" onclick="clearKeywords()" style="display:none">전체 해제</button>
+      </div>
+      <div id="kw-pills" class="kw-pill-list"><button class="kw-filter-pill" onclick="toggleKeyword('유해화학물질등')">
+      <span class="pill-check"></span>유해화학물질등
+    </button><button class="kw-filter-pill" onclick="toggleKeyword('제한물질')">
+      <span class="pill-check"></span>제한물질
+    </button><button class="kw-filter-pill" onclick="toggleKeyword('CRM')">
+      <span class="pill-check"></span>CRM
+    </button><button class="kw-filter-pill" onclick="toggleKeyword('Instrument Quote')">
+      <span class="pill-check"></span>Instrument Quote
+    </button><button class="kw-filter-pill" onclick="toggleKeyword('Quote')">
+      <span class="pill-check"></span>Quote
+    </button><button class="kw-filter-pill" onclick="toggleKeyword('Spectrum CE')">
+      <span class="pill-check"></span>Spectrum CE
+    </button></div>
+    </div>
+  </div>
+  <div id="kw-active-tags" style="display: none; flex-wrap: wrap; gap: 6px; align-items: center;"></div>
+</div>
+
+
+<div class="main">
+  <p class="results-meta" id="results-meta">전체 <strong>3건</strong> · 최신순</p>
+  <div class="notice-list" id="notice-list"><div class="notice-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="team-badge badge-regulation">Regulation</span>
+        <div class="card-title-group">
+          <div class="card-title">[공유] 화학물질관리법 개정에 따른 제한물질 관련 변경사항 안내</div>
+          <div class="card-meta">2026년 3월 27일</div>
+        </div>
+        <div class="card-right">
+          <span class="attachment-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>1</span>
+          <button class="btn-delete-notice" onclick="showDeleteConfirm(event,3)" title="공지 삭제">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+          </button>
+          <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+      <div class="card-keywords"><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('유해화학물질등')">유해화학물질등</span><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('제한물질')">제한물질</span></div>
+      <div class="card-body"><div class="card-body-inner">
+        <div class="card-content"></div>
+        <div class="card-attachments"><a class="attachment-link" href="https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&amp;%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/%5B%EA%B3%B5%EC%9C%A0%5D%20%ED%99%94%ED%95%99%EB%AC%BC%EC%A7%88%EA%B4%80%EB%A6%AC%EB%B2%95%20%EA%B0%9C%EC%A0%95%EC%97%90%20%EB%94%B0%EB%A5%B8%20%EC%A0%9C%ED%95%9C%EB%AC%BC%EC%A7%88%20%EA%B4%80%EB%A0%A8%20%EB%B3%80%EA%B2%BD%EC%82%AC%ED%95%AD%20%EC%95%88%EB%82%B4.pdf" target="_blank" onclick="event.stopPropagation()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+        [공유] 화학물질관리법 개정에 따른 제한물질 관련 변경사항 안내.pdf</a></div>
+      </div></div>
+      <div class="delete-confirm-bar" id="delete-bar-3">
+        <span class="delete-confirm-msg">이 공지를 삭제하시겠습니까? 삭제 후 다운로드된 파일로 SP를 업데이트하세요.</span>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button class="btn-delete-cancel" onclick="hideDeleteConfirm(event,3)">취소</button>
+          <button class="btn-delete-confirm" onclick="deleteNotice(event,3)">삭제 &amp; 다운로드</button>
+        </div>
+      </div>
+    </div><div class="notice-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="team-badge badge-cs">CS</span>
+        <div class="card-title-group">
+          <div class="card-title">CRM Spectrum CE System 8 Capillary 견적서 작성 안내</div>
+          <div class="card-meta">2026년 3월 24일</div>
+        </div>
+        <div class="card-right">
+          <span class="attachment-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>1</span>
+          <button class="btn-delete-notice" onclick="showDeleteConfirm(event,2)" title="공지 삭제">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+          </button>
+          <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+      <div class="card-keywords"><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('CRM')">CRM</span><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('Quote')">Quote</span><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('Spectrum CE')">Spectrum CE</span></div>
+      <div class="card-body"><div class="card-body-inner">
+        <div class="card-content"></div>
+        <div class="card-attachments"><a class="attachment-link" href="https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&amp;%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/CRM%20Spectrum%20CE%20System%208-Capillary%20%EA%B2%AC%EC%A0%81%EC%84%9C%20%EC%9E%91%EC%84%B1%20%EC%95%88%EB%82%B4.html" target="_blank" onclick="event.stopPropagation()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+        CRM Spectrum CE System 8-Capillary 견적서 작성 안내.html</a></div>
+      </div></div>
+      <div class="delete-confirm-bar" id="delete-bar-2">
+        <span class="delete-confirm-msg">이 공지를 삭제하시겠습니까? 삭제 후 다운로드된 파일로 SP를 업데이트하세요.</span>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button class="btn-delete-cancel" onclick="hideDeleteConfirm(event,2)">취소</button>
+          <button class="btn-delete-confirm" onclick="deleteNotice(event,2)">삭제 &amp; 다운로드</button>
+        </div>
+      </div>
+    </div><div class="notice-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="team-badge badge-cs">CS</span>
+        <div class="card-title-group">
+          <div class="card-title">CRM Sales Quote 작성 유의사항 및 Instrument Quote Type 신규 안내</div>
+          <div class="card-meta">2026년 3월 12일</div>
+        </div>
+        <div class="card-right">
+          <span class="attachment-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>1</span>
+          <button class="btn-delete-notice" onclick="showDeleteConfirm(event,1)" title="공지 삭제">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+          </button>
+          <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+      <div class="card-keywords"><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('CRM')">CRM</span><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('Quote')">Quote</span><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('Instrument Quote')">Instrument Quote</span></div>
+      <div class="card-body"><div class="card-body-inner">
+        <div class="card-content"></div>
+        <div class="card-attachments"><a class="attachment-link" href="https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&amp;%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/CRM%20Sales%20Quote%20%EC%9E%91%EC%84%B1%20%EC%9C%A0%EC%9D%98%EC%82%AC%ED%95%AD%20%EB%B0%8F%20Instrument%20Quote%20Type%20%EC%8B%A0%EA%B7%9C%20%EC%95%88%EB%82%B4.html" target="_blank" onclick="event.stopPropagation()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+        CRM Sales Quote 작성 유의사항 및 Instrument Quote Type 신규 안내.html</a></div>
+      </div></div>
+      <div class="delete-confirm-bar" id="delete-bar-1">
+        <span class="delete-confirm-msg">이 공지를 삭제하시겠습니까? 삭제 후 다운로드된 파일로 SP를 업데이트하세요.</span>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button class="btn-delete-cancel" onclick="hideDeleteConfirm(event,1)">취소</button>
+          <button class="btn-delete-confirm" onclick="deleteNotice(event,1)">삭제 &amp; 다운로드</button>
+        </div>
+      </div>
+    </div></div>
+</div>
+
+<footer>
+  <svg viewBox="0 0 245.5 80.5" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#ffffff">
+      <path d="m93.2 34.7c-.1-2.3-1.9-6.2-8.3-6.2h-11v.4c.3 5.3.3 16.7 0 22.2v.4s6.1 0 6.1 0v-.4c-.1-2.1-.2-4.7-.2-7.5h3.8c3.6 0 6.1-.9 7.6-2.7 1.8-2.1 1.9-4.3 1.8-6.3zm-10.3 4.7c-.5 0-1.6 0-3 0 0-2.7 0-4.1 0-6.8 1.4 0 2.2-.1 3.3 0 2.7.1 4 1.4 4 3.2s-.4 3.6-4.3 3.8z"></path>
+      <path d="m108.1 33.9h-.3c-.6-.2-.8-.1-1.3-.1-2.7 0-4.9 1.1-6 2.7v-2-.3h-5.5v.4c.4 6.8.3 11.1.2 15.4v1.2s0 .4 0 .4h5.8v-.4s-.1-2.1-.1-2.1c-.2-3.5-.1-5.9 0-7.2.3-1.9 1.5-3.4 4.1-3.4s1.3 0 1.9.1l.5.2.8-4.7z"></path>
+      <path d="m108 43c0 4 3.1 8.8 10.7 8.8s10.4-5 10.4-9.2-4-8.9-10.8-8.9-10.3 2.4-10.3 9.3zm5.9-.2c0-3.5 2-5.1 4.7-5.1s4.6.6 4.6 4.6-2.4 5.6-4.7 5.6c-3.3 0-4.6-2.5-4.6-5"></path>
+      <path d="m160.1 38.8c-.1-3-2.4-5.1-6.3-5.1s-4.7.9-5.9 2.7c-1-1.7-2.8-2.7-5.4-2.7s-4.6 1.2-5.6 2.7v-1.9-.4h-5.5v.4c.2 6.3 0 14.7 0 16.5v.4s5.8 0 5.8 0v-.4c-.1-1.9-.3-7.2 0-9.4.2-1.6.8-3.5 3.2-3.5s2.5.8 2.5 2.6c.1 2.5 0 5 0 7.4v2.9.4s5.8 0 5.8 0v-.6c0-1.8-.2-7.4 0-9.3.2-1.2.7-3.3 3.2-3.3s2.5.8 2.6 2.5c0 1.1 0 7.7-.1 10.2v.6s5.8 0 5.8 0v-.8c-.2-4-.1-7.2 0-9.6 0-1.1 0-1.8 0-2.2"></path>
+      <path d="m172.4 33.7c-4 0-6.1 1-7.8 2.7-2.2 2.4-2.4 5.6-2.3 6.9 0 1.4.4 3.4 1.8 5.1 1.8 2.2 5 3.3 9.1 3.3s3.9-.3 6-.8h.2s.7-4.1.7-4.1l-.5.2c-1.7.5-4 .9-6 .9-3.2 0-5.4-1-5.6-3.7v-.2s13.2 0 13.2 0 0-1.2 0-2.4c0-4.5-2.9-7.9-9.2-7.9m3.9 7.1h-7.8c0-2.1 1.6-3.6 3.9-3.6s3.9 1.1 3.9 3.6"></path>
+      <path d="m197.2 49.6s.4 2.5-.9 3.9c-1.1 1.1-3.3 1.2-4.6 1.2s-2.4 0-5.2-.7l-.7-.2-.7 4h.2c1.6.4 4.5.8 7.5.8s6.7-1 8.1-2.5 2-4 1.9-6.2c-.2-5.8-.2-9.6 0-15.1v-.3s-.3 0-.3 0c-2.5-.4-5.1-.8-7.8-.8-4.3 0-7.1.8-9.1 2.9-2.4 2.5-2.4 5.4-2.4 6.7 0 4.9 3.1 8.1 8.1 8.1s5-1 5.9-1.8zm-4.3-2.2c-2.6 0-4.1-1.3-4.2-3.9 0-1 0-2.9 1.3-4.3 1-1.1 2.5-1.7 4.7-1.7s1.6 0 2.5.2v1.2c0 1.5 0 3.3-.2 4.7-.3 1.9-1.4 3.8-4.2 3.8"></path>
+      <path d="m222.9 51c-.1-3 0-5.8 0-8.3 0-1.7 0-2.3 0-3.3 0-3.3-2.2-5.7-8.2-5.7s-4.5.2-7.4.9h-.2s-.5 4-.5 4l.5-.2c2.5-.9 4.8-1.3 6.9-1.3s3.3.6 3.3 1.6c0 1.7-2.4 1.6-5.4 2.3-3.5.7-7.1 1.8-6.9 6 .2 4.5 4.8 4.9 6.8 4.9s4.7-.7 5.7-2.3v1.5.4s.4 0 .4 0h5.1v-.4zm-5.5-5.5c-.2 2.4-3.3 2.7-4.3 2.7s-2.4-.3-2.6-1.7c-.1-1.3.9-2.3 3.4-2.7 1.1-.2 2.9-.6 3.6-1v2.6z"></path>
+      <path d="m52.2 27c2.9 2.1 4 6.3 2.5 9.7-1.4-2.7-6.8-5-10.4-5.7 2.7-.9 5.9-2.1 8-4z"></path>
+      <path d="m29.8 52.4c-2.9-2.1-4-6.3-2.5-9.7 1.4 2.7 6.8 5 10.4 5.7-2.7.9-5.9 2.1-8 4z"></path>
+      <path d="m28.9 54.2c0-.1 0-.1 0-.2s-.1-.1-.2-.1c-2.4-2.2-4-4.9-3.8-8.1.9-15.8 22.4-14.3 27.2-21.1-3.3-1.9-7-3.1-10.5-4.2-2.5 1.4-5.2 2.2-7.8 3.3-15.7 6.6-20.1 20.2-5.1 30.3h.2z"></path>
+      <path d="m53.3 25.3s-.1 0-.2-.1v.2s.1.1.2.1c2.3 2.1 4 4.9 3.7 8.1-1.1 15.8-22.4 14.3-27.2 21.1 3.3 1.9 7 3.1 10.5 4.2 2.5-1.4 5.2-2.2 7.8-3.3 15.7-6.6 20.1-20.2 5.2-30.3z"></path>
+    </g>
+  </svg>
+  
+</footer>
+
+<!-- ── 공지 등록 모달 ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeOnBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>공지 등록</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="guide-box">
+        <p>
+          <strong>① 팀·날짜 선택 → 첨부파일 SP 링크 입력 (제목 자동 추출)</strong><br>
+          <strong>②</strong> 필요 시 제목·키워드 수정<br>
+          <strong>③ [저장 &amp; 다운로드]</strong> 클릭<br>
+          <strong>④</strong> 다운로드된 파일로 SharePoint 기존 파일 덮어쓰기 업로드
+        </p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">팀 <span class="req">*</span></label>
+          <select class="form-select" id="f-team">
+            <option value="CS">Customer Service</option>
+            <option value="Logistics">Logistics</option>
+            <option value="Regulation">Regulation</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">등록일 <span class="req">*</span></label>
+          <input type="date" class="form-input" id="f-date">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">제목 <span class="req">*</span></label>
+        <input type="text" class="form-input" id="f-title" placeholder="첨부파일 URL 입력 시 자동 추출">
+      </div>
+
+
+      <div class="form-group">
+        <label class="form-label">키워드 태그</label>
+        <p class="form-hint" style="margin-bottom:8px">Enter 또는 쉼표(,)로 태그를 추가하세요. 검색 시 활용됩니다.</p>
+        <div class="tag-input-wrap" id="tag-wrap" onclick="document.getElementById('tag-input').focus()">
+          <span class="tag-pill">유해화학물질등<button onclick="removeTag(0)" title="삭제">×</button></span><span class="tag-pill">제한물질<button onclick="removeTag(1)" title="삭제">×</button></span><input type="text" id="tag-input" class="tag-text-input" placeholder="예: SAP, 배송, 법령개정" onkeydown="onTagKey(event)" oninput="onTagInput(event)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">첨부파일 링크 (SharePoint)</label>
+        <p class="form-hint" style="margin-bottom:10px">SP에 파일 업로드 후 우클릭 → [링크 복사]로 얻은 URL을 붙여넣으세요.</p>
+        <div class="attach-list" id="attach-list"><div class="attach-row">
+    <input type="text" class="form-input" placeholder="파일명 (비워두면 URL에서 자동 추출)" value="">
+    <input type="text" class="form-input" placeholder="SharePoint 링크 URL" oninput="autoFillName(this)" value="">
+    <button class="btn-remove-attach" onclick="this.parentElement.remove()">×</button></div></div>
+        <button class="btn-add-attach" onclick="addAttachRow()">+ 첨부파일 추가</button>
+      </div>
+
+      <div id="result-section" style="display: block;" class="result-wrap">
+        <div class="dl-success-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <div>
+            <div class="dl-success-title">다운로드 완료!</div>
+            <div class="dl-success-sub">다운로드된 <strong>promega_notice_hub.html</strong> 파일로 SharePoint의 기존 파일을 덮어쓰기 업로드하세요.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">닫기</button>
+      <button class="btn-primary" onclick="saveAndDownload()">저장 &amp; 다운로드</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  공지사항 데이터 (새 공지: 배열 맨 앞에 붙여넣기)
+// ══════════════════════════════════════════════════
+const notices = [
+  {
+    id: 3,
+    team: "Regulation",
+    title: "[공유] 화학물질관리법 개정에 따른 제한물질 관련 변경사항 안내",
+    date: "2026-03-27",
+    keywords: ["유해화학물질등", "제한물질"],
+    content: ``,
+    attachments: [
+      { name: "[공유] 화학물질관리법 개정에 따른 제한물질 관련 변경사항 안내.pdf", url: "https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/%5B%EA%B3%B5%EC%9C%A0%5D%20%ED%99%94%ED%95%99%EB%AC%BC%EC%A7%88%EA%B4%80%EB%A6%AC%EB%B2%95%20%EA%B0%9C%EC%A0%95%EC%97%90%20%EB%94%B0%EB%A5%B8%20%EC%A0%9C%ED%95%9C%EB%AC%BC%EC%A7%88%20%EA%B4%80%EB%A0%A8%20%EB%B3%80%EA%B2%BD%EC%82%AC%ED%95%AD%20%EC%95%88%EB%82%B4.pdf" }
+    ]
+  },
+  {
+    id: 2,
+    team: "CS",
+    title: "CRM Spectrum CE System 8 Capillary 견적서 작성 안내",
+    date: "2026-03-24",
+    keywords: ["CRM", "Quote", "Spectrum CE"],
+    content: ``,
+    attachments: [
+      { name: "CRM Spectrum CE System 8-Capillary 견적서 작성 안내.html", url: "https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/CRM%20Spectrum%20CE%20System%208-Capillary%20%EA%B2%AC%EC%A0%81%EC%84%9C%20%EC%9E%91%EC%84%B1%20%EC%95%88%EB%82%B4.html" }
+    ]
+  },
+  {
+    id: 1,
+    team: "CS",
+    title: "CRM Sales Quote 작성 유의사항 및 Instrument Quote Type 신규 안내",
+    date: "2026-03-12",
+    keywords: ["CRM", "Quote", "Instrument Quote"],
+    content: ``,
+    attachments: [
+      { name: "CRM Sales Quote 작성 유의사항 및 Instrument Quote Type 신규 안내.html", url: "https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/CRM%20Sales%20Quote%20%EC%9E%91%EC%84%B1%20%EC%9C%A0%EC%9D%98%EC%82%AC%ED%95%AD%20%EB%B0%8F%20Instrument%20Quote%20Type%20%EC%8B%A0%EA%B7%9C%20%EC%95%88%EB%82%B4.html" }
+    ]
+  }
+];
+
+// ── 필터 & 렌더링 ──
+let currentTeam = 'all';
+let selectedKeywords = new Set();
+
+function renderKeywordBar() {
+  const allKws = [];
+  notices.forEach(n => { (n.keywords || []).forEach(k => { if (k && !allKws.includes(k)) allKws.push(k); }); });
+  allKws.sort((a, b) => a.localeCompare(b, 'ko'));
+  const bar   = document.getElementById('kw-filter-bar');
+  const pills = document.getElementById('kw-pills');
+  const btn   = document.getElementById('kw-dropdown-btn');
+  if (!allKws.length) { bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+
+  // 드롭다운 내 키워드 필 렌더링
+  pills.innerHTML = allKws.map(k => {
+    const active = selectedKeywords.has(k);
+    return `<button class="kw-filter-pill${active?' active':''}" onclick="toggleKeyword('${k.replace(/'/g,"\'")}')">
+      <span class="pill-check"></span>${esc(k)}
+    </button>`;
+  }).join('');
+
+  // 선택된 키워드 태그 (버튼 옆)
+  const activeTagsEl = document.getElementById('kw-active-tags');
+  if (selectedKeywords.size > 0) {
+    activeTagsEl.style.display = 'flex';
+    activeTagsEl.innerHTML = [...selectedKeywords].map(k =>
+      `<span class="kw-active-tag">${esc(k)}<button onclick="toggleKeyword('${k.replace(/'/g,"\'")}')">×</button></span>`
+    ).join('');
+    document.getElementById('kw-clear-btn').style.display = 'inline';
+    btn.classList.add('active');
+  } else {
+    activeTagsEl.style.display = 'none';
+    activeTagsEl.innerHTML = '';
+    document.getElementById('kw-clear-btn').style.display = 'none';
+    btn.classList.remove('active');
+  }
+
+  // 버튼 라벨
+  document.getElementById('kw-btn-label').textContent =
+    selectedKeywords.size > 0 ? `키워드 (${selectedKeywords.size})` : '키워드 필터';
+}
+
+function toggleKeyword(kw) {
+  if (selectedKeywords.has(kw)) selectedKeywords.delete(kw);
+  else selectedKeywords.add(kw);
+  applyFilters();
+}
+
+function clearKeywords() {
+  selectedKeywords.clear();
+  applyFilters();
+  closeKwDropdown();
+}
+
+function toggleKwDropdown(e) {
+  e.stopPropagation();
+  const panel = document.getElementById('kw-dropdown-panel');
+  const btn   = document.getElementById('kw-dropdown-btn');
+  const isOpen = panel.classList.contains('open');
+  panel.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+
+function closeKwDropdown() {
+  document.getElementById('kw-dropdown-panel').classList.remove('open');
+  document.getElementById('kw-dropdown-btn').classList.remove('open');
+}
+
+function setTeam(team, btn) {
+  currentTeam = team;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function hl(text, q) {
+  if (!q) return esc(text);
+  return esc(text).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'), m => `<mark>${m}</mark>`);
+}
+function fmtDate(s) { const d = new Date(s); return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`; }
+
+function applyFilters() {
+  const q = '';  // 검색창 제거됨
+  const filtered = notices.filter(n => {
+    const teamOk = currentTeam === 'all' || n.team === currentTeam;
+    const kws = (n.keywords || []).join(' ').toLowerCase();
+    const searchOk = !q || n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q) || kws.includes(q);
+    const kwOk = selectedKeywords.size === 0 || [...selectedKeywords].some(k => (n.keywords || []).includes(k));
+    return teamOk && searchOk && kwOk;
+  });
+  document.getElementById('notice-count').textContent = `총 ${notices.length}건`;
+  const isFiltered = q || currentTeam !== 'all' || selectedKeywords.size > 0;
+  document.getElementById('results-meta').innerHTML = isFiltered
+    ? `검색 결과: <strong>${filtered.length}건</strong>`
+    : `전체 <strong>${filtered.length}건</strong> · 최신순`;
+  renderKeywordBar();
+
+  const list = document.getElementById('notice-list');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" style="margin:0 auto;display:block"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><p>검색 결과가 없습니다.</p></div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(n => {
+    const bc = n.team==='CS'?'badge-cs':n.team==='Logistics'?'badge-logistics':'badge-regulation';
+    const has = n.attachments && n.attachments.length > 0;
+    const kws = n.keywords && n.keywords.length > 0;
+    const links = has ? n.attachments.map(a =>
+      `<a class="attachment-link" href="${esc(a.url)}" target="_blank" onclick="event.stopPropagation()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        ${esc(a.name)}</a>`).join('') : '';
+    const kwHtml = kws ? n.keywords.map(k =>
+      `<span class="kw-tag" onclick="event.stopPropagation();searchKeyword('${esc(k)}')">${hl(k, q)}</span>`).join('') : '';
+    return `<div class="notice-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="team-badge ${bc}">${n.team}</span>
+        <div class="card-title-group">
+          <div class="card-title">${hl(n.title,q)}</div>
+          <div class="card-meta">${fmtDate(n.date)}</div>
+        </div>
+        <div class="card-right">
+          ${has?`<span class="attachment-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>${n.attachments.length}</span>`:''}
+          <button class="btn-delete-notice" onclick="showDeleteConfirm(event,${n.id})" title="공지 삭제">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+          <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      ${kws ? `<div class="card-keywords">${kwHtml}</div>` : ''}
+      <div class="card-body"><div class="card-body-inner">
+        <div class="card-content">${hl(n.content,q)}</div>
+        ${has?`<div class="card-attachments">${links}</div>`:''}
+      </div></div>
+      <div class="delete-confirm-bar" id="delete-bar-${n.id}">
+        <span class="delete-confirm-msg">이 공지를 삭제하시겠습니까? 삭제 후 다운로드된 파일로 SP를 업데이트하세요.</span>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button class="btn-delete-cancel" onclick="hideDeleteConfirm(event,${n.id})">취소</button>
+          <button class="btn-delete-confirm" onclick="deleteNotice(event,${n.id})">삭제 & 다운로드</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleCard(el) { el.classList.toggle('expanded'); }
+function searchKeyword(kw) {
+  toggleKeyword(kw);
+  window.scrollTo({top: document.querySelector('.kw-filter-bar').offsetTop - 80, behavior: 'smooth'});
+}
+
+// ── 모달 ──
+let currentTags = [];
+
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f-title').value = '';
+  document.getElementById('attach-list').innerHTML = '';
+  currentTags = [];
+  renderTags();
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeOnBg(e) { if (e.target===document.getElementById('modal-overlay')) closeModal(); }
+
+// ── 파일 드래그&드롭 ──
+function onDragOver(e) { e.preventDefault(); document.getElementById('file-drop-zone').classList.add('dragover'); }
+function onDragLeave(e) { document.getElementById('file-drop-zone').classList.remove('dragover'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('file-drop-zone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+function onFileSelect(input) { if (input.files[0]) processFile(input.files[0]); }
+
+async function processFile(file) {
+  const zone = document.getElementById('file-drop-zone');
+  const statusBox = document.getElementById('ai-status');
+  const statusText = document.getElementById('ai-status-text');
+  const spinner = document.getElementById('ai-spinner');
+
+  const allowedTypes = ['application/pdf','text/html','text/htm'];
+  const allowedExts = ['.pdf','.html','.htm'];
+  const ext = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
+  if (!allowedExts.includes(ext)) {
+    alert('PDF 또는 HTML 파일만 업로드 가능합니다.');
+    return;
+  }
+
+  zone.classList.add('has-file');
+  zone.classList.remove('dragover');
+  document.getElementById('file-drop-label').textContent = `📄 ${file.name}`;
+  statusBox.className = 'ai-status-box';
+  statusBox.style.display = 'flex';
+  spinner.style.display = 'block';
+  statusText.textContent = 'AI가 파일을 분석 중입니다... (최대 15초)';
+
+  try {
+    let fileContent = '';
+    let mediaType = 'application/pdf';
+    let msgContent;
+
+    if (ext === '.pdf') {
+      const arrayBuffer = await file.arrayBuffer();
+      const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+      mediaType = 'application/pdf';
+      msgContent = [
+        { type: 'document', source: { type: 'base64', media_type: mediaType, data: base64 } },
+        { type: 'text', text: '이 문서의 내용을 분석해서 아래 JSON 형식으로만 응답하세요. JSON 외 다른 텍스트 없이 순수 JSON만 응답하세요:\n{"title": "문서의 핵심 제목 (원문 그대로)", "summary": "주요 내용을 3~5문장으로 핵심만 요약 (한국어)", "keywords": ["관련 키워드1", "키워드2", "키워드3"] }' }
+      ];
+    } else {
+      fileContent = await file.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(fileContent, 'text/html');
+      const text = doc.body ? doc.body.innerText.replace(/\s+/g,' ').trim().slice(0, 8000) : fileContent.slice(0, 8000);
+      msgContent = [
+        { type: 'text', text: `다음 텍스트를 분석해서 아래 JSON 형식으로만 응답하세요. JSON 외 다른 텍스트 없이 순수 JSON만 응답하세요:\n{"title": "핵심 제목 (원문에서 추출)", "summary": "주요 내용을 3~5문장으로 핵심만 요약 (한국어)", "keywords": ["관련 키워드1", "키워드2", "키워드3"] }\n\n텍스트:\n${text}` }
+      ];
+    }
+
+    // 15초 타임아웃 설정
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    let resp;
+    try {
+      resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: msgContent }]
+        })
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+
+    if (!resp.ok) {
+      if (resp.status === 0 || resp.type === 'opaque') throw new Error('CORS_BLOCKED');
+      throw new Error(`API 오류: ${resp.status}`);
+    }
+    const data = await resp.json();
+    const raw = data.content.find(c => c.type === 'text')?.text || '';
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('응답 파싱 실패');
+    const result = JSON.parse(jsonMatch[0]);
+
+    if (result.title) document.getElementById('f-title').value = result.title;
+    if (result.summary) document.getElementById('f-content').value = result.summary;
+    if (result.keywords && Array.isArray(result.keywords)) {
+      result.keywords.forEach(k => { if (k && !currentTags.includes(k)) currentTags.push(k); });
+      renderTags();
+    }
+
+    spinner.style.display = 'none';
+    statusBox.className = 'ai-status-box done';
+    statusText.textContent = '✓ 제목, 요약, 키워드가 자동으로 입력되었습니다. 내용을 확인하고 수정하세요.';
+
+  } catch(err) {
+    spinner.style.display = 'none';
+    statusBox.style.display = 'flex';
+    statusBox.className = 'ai-status-box error';
+    const isBlocked = err.name === 'AbortError' || err.message === 'CORS_BLOCKED' || err.message.includes('fetch') || err.message.includes('Failed');
+    if (isBlocked) {
+      statusText.innerHTML = '⚠️ 이 환경에서는 AI 자동 추출을 사용할 수 없습니다.<br><span style="font-size:12px;opacity:0.8">파일명을 참고해서 제목·내용을 직접 입력해 주세요. 키워드도 수동으로 추가하실 수 있어요.</span>';
+    } else {
+      statusText.textContent = '파일 분석 중 오류가 발생했습니다. 직접 입력해 주세요. (' + err.message + ')';
+    }
+  }
+}
+
+// ── 키워드 태그 ──
+function renderTags() {
+  const wrap = document.getElementById('tag-wrap');
+  const input = document.getElementById('tag-input');
+  wrap.querySelectorAll('.tag-pill').forEach(p => p.remove());
+  currentTags.forEach((tag, i) => {
+    const pill = document.createElement('span');
+    pill.className = 'tag-pill';
+    pill.innerHTML = `${esc(tag)}<button onclick="removeTag(${i})" title="삭제">×</button>`;
+    wrap.insertBefore(pill, input);
+  });
+}
+function removeTag(i) { currentTags.splice(i, 1); renderTags(); }
+function addTag(val) {
+  const trimmed = val.trim().replace(/,$/, '').trim();
+  if (trimmed && !currentTags.includes(trimmed)) { currentTags.push(trimmed); renderTags(); }
+}
+function onTagKey(e) {
+  const input = document.getElementById('tag-input');
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    addTag(input.value);
+    input.value = '';
+  } else if (e.key === 'Backspace' && !input.value && currentTags.length) {
+    currentTags.pop(); renderTags();
+  }
+}
+function onTagInput(e) {
+  const v = e.target.value;
+  if (v.includes(',')) {
+    v.split(',').forEach(p => addTag(p));
+    e.target.value = '';
+  }
+}
+
+// ── 첨부파일 행 ──
+function addAttachRow(nm='', url='') {
+  const row = document.createElement('div');
+  row.className = 'attach-row';
+  row.innerHTML = `
+    <input type="text" class="form-input" placeholder="파일명 (비워두면 URL에서 자동 추출)" value="${esc(nm)}">
+    <input type="text" class="form-input" placeholder="SharePoint 링크 URL" oninput="autoFillName(this)" value="${esc(url)}">
+    <button class="btn-remove-attach" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('attach-list').appendChild(row);
+}
+
+function autoFillName(urlInput) {
+  const nameInput = urlInput.parentElement.querySelector('input:first-child');
+  try {
+    const url = urlInput.value.trim();
+    if (!url) return;
+    const decoded = decodeURIComponent(url);
+    const match = decoded.match(/\/([^\/\?]+\.[a-zA-Z0-9]+)(?:[\?#]|$)/);
+    if (!match) return;
+    const filename = match[1];
+    // 파일명 칸 자동 채우기
+    if (!nameInput.value.trim()) nameInput.value = filename;
+    // 제목 칸도 자동 채우기 (비어있을 때만)
+    const titleInput = document.getElementById('f-title');
+    if (!titleInput.value.trim()) {
+      const pretty = filename
+        .replace(/\.[^.]+$/, '')        // 확장자 제거
+        .replace(/[_\-]+/g, ' ')        // _와 -를 공백으로
+        .replace(/\s+/g, ' ').trim();   // 중복 공백 제거
+      titleInput.value = pretty;
+    }
+  } catch(e) {}
+}
+
+// ── 템플릿 리터럴 이스케이프 헬퍼 ──
+function escForTemplate(str) {
+  return str.split('\\').join('\\\\').split('`').join('\\`').split('${').join('\\${');
+}
+
+
+// ── 공지 삭제 ──
+function showDeleteConfirm(e, id) {
+  e.stopPropagation();
+  document.querySelectorAll('.delete-confirm-bar').forEach(b => b.classList.remove('show'));
+  const bar = document.getElementById('delete-bar-' + id);
+  if (bar) bar.classList.add('show');
+}
+function hideDeleteConfirm(e, id) {
+  e.stopPropagation();
+  const bar = document.getElementById('delete-bar-' + id);
+  if (bar) bar.classList.remove('show');
+}
+function deleteNotice(e, id) {
+  e.stopPropagation();
+  const idx = notices.findIndex(n => n.id === id);
+  if (idx === -1) return;
+  const title = notices[idx].title;
+  notices.splice(idx, 1);
+  applyFilters();
+  downloadUpdatedHtml();
+}
+function downloadUpdatedHtml() {
+  document.querySelectorAll('.delete-confirm-bar').forEach(function(b){ b.classList.remove('show'); });
+  document.querySelectorAll('.notice-card.expanded').forEach(function(c){ c.classList.remove('expanded'); });
+  buildAndDownload(notices);
+}
+
+
+function serializeNotices(list) {
+  return list.map(function(n) {
+    var ce = escForTemplate(n.content || '');
+    var as = (n.attachments||[]).length
+      ? '[\n      ' + (n.attachments||[]).map(function(a){
+          return '{ name: ' + JSON.stringify(a.name) + ', url: ' + JSON.stringify(a.url) + ' }';
+        }).join(',\n      ') + '\n    ]'
+      : '[]';
+    var ks = (n.keywords||[]).length
+      ? '[' + (n.keywords||[]).map(function(k){ return JSON.stringify(k); }).join(', ') + ']'
+      : '[]';
+    return '  {\n    id: ' + n.id
+      + ',\n    team: ' + JSON.stringify(n.team)
+      + ',\n    title: ' + JSON.stringify(n.title)
+      + ',\n    date: ' + JSON.stringify(n.date)
+      + ',\n    keywords: ' + ks
+      + ',\n    content: `' + ce + '`'
+      + ',\n    attachments: ' + as
+      + '\n  }';
+  }).join(',\n');
+}
+
+function buildAndDownload(updatedList) {
+  var marker    = 'const notices = [';
+  var markerEnd = '];\n\n// ── 필터';
+
+  function doDownload(src) {
+    var si = src.indexOf(marker), ei = src.indexOf(markerEnd);
+    if (si === -1 || ei === -1) { alert('notices 배열을 찾을 수 없습니다.'); return; }
+    var newHtml = src.slice(0, si) + marker + '\n' + serializeNotices(updatedList) + '\n' + markerEnd + src.slice(ei + markerEnd.length);
+    var blob = new Blob([newHtml], {type: 'text/html;charset=utf-8'});
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url; a.download = 'promega_notice_hub.html';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  // fetch 시도 (SP/http 환경)
+  fetch(location.href)
+    .then(function(r) { return r.text(); })
+    .then(function(src) { doDownload(src); })
+    .catch(function() {
+      // 로컬 file:// 환경 — outerHTML 폴백
+      var overlay = document.getElementById('modal-overlay');
+      var wasOpen = overlay.classList.contains('open');
+      overlay.classList.remove('open');
+      document.querySelectorAll('.delete-confirm-bar').forEach(function(b){ b.classList.remove('show'); });
+      document.querySelectorAll('.notice-card.expanded').forEach(function(c){ c.classList.remove('expanded'); });
+      var src = document.documentElement.outerHTML;
+      if (wasOpen) overlay.classList.add('open');
+      doDownload(src);
+    });
+}
+
+// ── 저장 & 다운로드 ──
+function saveAndDownload() {
+  const team    = document.getElementById('f-team').value;
+  const date    = document.getElementById('f-date').value;
+  const title   = document.getElementById('f-title').value.trim();
+  const cnt     = '';  // 내용 요약 필드 제거됨
+  if (!title || !date) { alert('제목과 등록일은 필수입니다.'); return; }
+
+  const rows = document.querySelectorAll('#attach-list .attach-row');
+  const attachments = [];
+  rows.forEach(r => {
+    const ins = r.querySelectorAll('input');
+    let n = ins[0].value.trim(), u = ins[1].value.trim();
+    if (!u) return;
+    if (!n) {
+      try {
+        const decoded = decodeURIComponent(u);
+        const match = decoded.match(/\/([^\/\?]+\.[a-zA-Z0-9]+)(?:[\?#]|$)/);
+        n = match ? match[1] : 'SP 첨부파일';
+      } catch(e) { n = 'SP 첨부파일'; }
+    }
+    attachments.push({name:n, url:u});
+  });
+
+  const newId = notices.length ? Math.max(...notices.map(n=>n.id)) + 1 : 1;
+  const updatedNotices = [{ id: newId, team, title, date, keywords: [...currentTags], content: cnt, attachments }, ...notices];
+
+  buildAndDownload(updatedNotices);
+  notices.length = 0;
+  updatedNotices.forEach(function(n){ notices.push(n); });
+  applyFilters();
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+applyFilters();
+document.addEventListener('click', function(e) { if (!document.getElementById('kw-dropdown-wrap').contains(e.target)) closeKwDropdown(); });
+</script>
+
+</body></html>
