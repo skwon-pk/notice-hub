@@ -227,7 +227,7 @@
     <h1>공지사항 <span>허브</span></h1>
     <p class="hero-sub">Customer Service · Logistics · Regulation</p>
   </div>
-  <div class="notice-count" id="notice-count">총 4건</div>
+  <div class="notice-count" id="notice-count">총 5건</div>
 </div>
 
 <div class="controls">
@@ -258,6 +258,8 @@
       <span class="pill-check"></span>재고조회
     </button><button class="kw-filter-pill" onclick="toggleKeyword('제한물질')">
       <span class="pill-check"></span>제한물질
+    </button><button class="kw-filter-pill" onclick="toggleKeyword('출고일정')">
+      <span class="pill-check"></span>출고일정
     </button><button class="kw-filter-pill" onclick="toggleKeyword('CRM')">
       <span class="pill-check"></span>CRM
     </button><button class="kw-filter-pill" onclick="toggleKeyword('Instrument Quote')">
@@ -274,8 +276,37 @@
 
 
 <div class="main">
-  <p class="results-meta" id="results-meta">전체 <strong>4건</strong> · 최신순</p>
+  <p class="results-meta" id="results-meta">전체 <strong>5건</strong> · 최신순</p>
   <div class="notice-list" id="notice-list"><div class="notice-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="team-badge badge-cs">CS</span>
+        <div class="card-title-group">
+          <div class="card-title">2026년 4월 출고 일정 안내</div>
+          <div class="card-meta">2026년 3월 30일</div>
+        </div>
+        <div class="card-right">
+          <span class="attachment-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>1</span>
+          <button class="btn-delete-notice" onclick="showDeleteConfirm(event,5)" title="공지 삭제">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+          </button>
+          <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+      </div>
+      <div class="card-keywords"><span class="kw-tag" onclick="event.stopPropagation();searchKeyword('출고일정')">출고일정</span></div>
+      <div class="card-body"><div class="card-body-inner">
+        <div class="card-content"></div>
+        <div class="card-attachments"><a class="attachment-link" href="https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&amp;%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/2026%EB%85%84%204%EC%9B%94%20%EC%B6%9C%EA%B3%A0%20%EC%9D%BC%EC%A0%95%20%EC%95%88%EB%82%B4.html" target="_blank" onclick="event.stopPropagation()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+        2026년 4월 출고 일정 안내.html</a></div>
+      </div></div>
+      <div class="delete-confirm-bar" id="delete-bar-5">
+        <span class="delete-confirm-msg">이 공지를 삭제하시겠습니까? 삭제 후 다운로드된 파일로 SP를 업데이트하세요.</span>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button class="btn-delete-cancel" onclick="hideDeleteConfirm(event,5)">취소</button>
+          <button class="btn-delete-confirm" onclick="deleteNotice(event,5)">삭제 &amp; 다운로드</button>
+        </div>
+      </div>
+    </div><div class="notice-card" onclick="toggleCard(this)">
       <div class="card-header">
         <span class="team-badge badge-regulation">Regulation</span>
         <div class="card-title-group">
@@ -456,7 +487,7 @@
         <label class="form-label">키워드 태그</label>
         <p class="form-hint" style="margin-bottom:8px">Enter 또는 쉼표(,)로 태그를 추가하세요. 검색 시 활용됩니다.</p>
         <div class="tag-input-wrap" id="tag-wrap" onclick="document.getElementById('tag-input').focus()">
-          <span class="tag-pill">재고조회<button onclick="removeTag(0)" title="삭제">×</button></span><input type="text" id="tag-input" class="tag-text-input" placeholder="예: SAP, 배송, 법령개정" onkeydown="onTagKey(event)" oninput="onTagInput(event)">
+          <span class="tag-pill">출고일정<button onclick="removeTag(0)" title="삭제">×</button></span><input type="text" id="tag-input" class="tag-text-input" placeholder="예: SAP, 배송, 법령개정" onkeydown="onTagKey(event)" oninput="onTagInput(event)">
         </div>
       </div>
 
@@ -493,6 +524,17 @@
 //  공지사항 데이터 (새 공지: 배열 맨 앞에 붙여넣기)
 // ══════════════════════════════════════════════════
 const notices = [
+  {
+    id: 5,
+    team: "CS",
+    title: "2026년 4월 출고 일정 안내",
+    date: "2026-03-30",
+    keywords: ["출고일정"],
+    content: ``,
+    attachments: [
+      { name: "2026년 4월 출고 일정 안내.html", url: "https://promega-my.sharepoint.com/personal/jungeun_kwon_promega_com/Documents/Jungen%20Kwon/Promega%20Korea/%EC%97%85%EB%AC%B4%EB%A7%A4%EB%89%B4%EC%96%BC%20&%20%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4/CS/%EA%B3%B5%EC%A7%80%EC%82%AC%ED%95%AD/%EB%AA%A9%EB%A1%9D/2026%EB%85%84%204%EC%9B%94%20%EC%B6%9C%EA%B3%A0%20%EC%9D%BC%EC%A0%95%20%EC%95%88%EB%82%B4.html" }
+    ]
+  },
   {
     id: 4,
     team: "CS",
