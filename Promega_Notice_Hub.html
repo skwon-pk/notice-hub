@@ -457,10 +457,11 @@
 
       <div class="guide-box">
         <p>
-          <strong>① 팀·날짜 선택 → 첨부파일 SP 링크 입력 (제목 자동 추출)</strong><br>
-          <strong>②</strong> 필요 시 제목·키워드 수정<br>
-          <strong>③ [저장 &amp; 다운로드]</strong> 클릭<br>
-          <strong>④</strong> 다운로드된 파일로 SharePoint 기존 파일 덮어쓰기 업로드
+          <strong>① 팀·날짜 선택</strong><br>
+          <strong>②</strong> 제목 직접 입력 · 키워드 태그 추가<br>
+          <strong>③</strong> 첨부파일 링크: SP에서 파일 우클릭 → [링크 복사] → <strong>"Promega Corporation 내 사람"</strong> 선택 → 파일명·URL 입력<br>
+          <strong>④ [저장 &amp; 다운로드]</strong> 클릭<br>
+          <strong>⑤</strong> 다운로드된 파일을 GitHub에 덮어쓰기 업로드
         </p>
       </div>
 
@@ -481,7 +482,7 @@
 
       <div class="form-group">
         <label class="form-label">제목 <span class="req">*</span></label>
-        <input type="text" class="form-input" id="f-title" placeholder="첨부파일 URL 입력 시 자동 추출">
+        <input type="text" class="form-input" id="f-title" placeholder="공지 제목을 입력하세요">
       </div>
 
 
@@ -495,9 +496,9 @@
 
       <div class="form-group">
         <label class="form-label">첨부파일 링크 (SharePoint)</label>
-        <p class="form-hint" style="margin-bottom:10px">SP에 파일 업로드 후 우클릭 → [링크 복사]로 얻은 URL을 붙여넣으세요.</p>
+        <p class="form-hint" style="margin-bottom:10px">SP에서 파일 우클릭 → [링크 복사] → <strong>"Promega Corporation 내 사람"</strong> 옵션 선택 후 URL을 붙여넣으세요.</p>
         <div class="attach-list" id="attach-list"><div class="attach-row">
-    <input type="text" class="form-input" placeholder="파일명 (비워두면 URL에서 자동 추출)" value="">
+    <input type="text" class="form-input" placeholder="파일명 (예: 출고일정안내.html)" value="">
     <input type="text" class="form-input" placeholder="SharePoint 링크 URL" oninput="autoFillName(this)" value="">
     <button class="btn-remove-attach" onclick="this.parentElement.remove()">×</button></div></div>
         <button class="btn-add-attach" onclick="addAttachRow()">+ 첨부파일 추가</button>
@@ -534,7 +535,7 @@ const notices = [
     keywords: ["출고일정", "수입발주"],
     content: ``,
     attachments: [
-      { name: "2026년 4월 출고 일정 안내.html", url: "https://promega-my.sharepoint.com/:u:/p/jungeun_kwon/IQCoKgN3ZCI9Tri_l_QYbs7gAUNzSgW_5bgMJWWGida9mUU?e=Akooml" }
+      { name: "2026년 4월 출고 일정 안내.html", url: "https://promega.sharepoint.com/:u:/s/KRCDxTeam/IQAQhq5ZiWSCTI1Xas3LOGl-AeFhAwkCEdQ5CaVUG_py29U?e=6UTSVD" }
     ]
   },
   {
@@ -545,7 +546,7 @@ const notices = [
     keywords: ["재고조회"],
     content: ``,
     attachments: [
-      { name: "Inventory Lookup Page 개설 안내.html", url: "https://promega-my.sharepoint.com/:u:/p/jungeun_kwon/IQDzb_IZAgAXTb3rYtqAAr0bASj8FggTBpnPwM4y0RVznh0?e=00wHR7" }
+      { name: "Inventory Lookup Page 개설 안내.html", url: "https://promega.sharepoint.com/:u:/s/KRCDxTeam/IQB7WxYnweZATaO__15YH6LsASCTwul-u-SZQOCAp4ac-dc?e=fWZI1f" }
     ]
   },
   {
@@ -556,7 +557,7 @@ const notices = [
     keywords: ["유해화학물질등", "제한물질"],
     content: ``,
     attachments: [
-      { name: "[공유] 화학물질관리법 개정에 따른 제한물질 관련 변경사항 안내.pdf", url: "https://promega-my.sharepoint.com/:b:/p/jungeun_kwon/IQAEVR0O7NErSZzpn-kT0O3LAcw51kuQnDzwAz0l-zBtfu0?e=NUbJQs" }
+      { name: "[공유] 화학물질관리법 개정에 따른 제한물질 관련 변경사항 안내.pdf", url: "https://promega.sharepoint.com/:b:/s/KRCDxTeam/IQBfgdzV7P2XQqHaj_eaacmzAYrikoKTw8VyZzbuh17HOoI?e=UoXfA4" }
     ]
   },
   {
@@ -567,7 +568,7 @@ const notices = [
     keywords: ["CRM", "Quote", "Spectrum CE"],
     content: ``,
     attachments: [
-      { name: "CRM Spectrum CE System 8-Capillary 견적서 작성 안내.html", url: "https://promega-my.sharepoint.com/:u:/p/jungeun_kwon/IQDS7ruMqUw4SoZLvuI_biVIARFlwLsHYuOFNrW0oxX8iyk?e=121Xkv" }
+      { name: "CRM Spectrum CE System 8-Capillary 견적서 작성 안내.html", url: "https://promega.sharepoint.com/:u:/s/KRCDxTeam/IQBJwa8MGQpTRKdU5QjzDa_lAcrdsVv77D9Z8DMCjobNlRk?e=pPVm9t" }
     ]
   },
   {
@@ -578,7 +579,7 @@ const notices = [
     keywords: ["CRM", "Quote", "Instrument Quote"],
     content: ``,
     attachments: [
-      { name: "CRM Sales Quote 작성 유의사항 및 Instrument Quote Type 신규 안내.html", url: "https://promega-my.sharepoint.com/:u:/p/jungeun_kwon/IQBsbYhH42QzRYkIbaedGRjIAQ7iFe5N0r3TbCzNkNsHIqA?e=kGaXvj" }
+      { name: "CRM Sales Quote 작성 유의사항 및 Instrument Quote Type 신규 안내.html", url: "https://promega.sharepoint.com/:u:/s/KRCDxTeam/IQBvfBHfwLRAQpJ-8Z3p7Nq6ARDTLf2h9v3zcGGFchkJaIg?e=RxjBrY" }
     ]
   }
 ];
@@ -897,7 +898,7 @@ function addAttachRow(nm='', url='') {
   const row = document.createElement('div');
   row.className = 'attach-row';
   row.innerHTML = `
-    <input type="text" class="form-input" placeholder="파일명 (비워두면 URL에서 자동 추출)" value="${esc(nm)}">
+    <input type="text" class="form-input" placeholder="파일명 (예: 출고일정안내.html)" value="${esc(nm)}">
     <input type="text" class="form-input" placeholder="SharePoint 링크 URL" oninput="autoFillName(this)" value="${esc(url)}">
     <button class="btn-remove-attach" onclick="this.parentElement.remove()">×</button>`;
   document.getElementById('attach-list').appendChild(row);
